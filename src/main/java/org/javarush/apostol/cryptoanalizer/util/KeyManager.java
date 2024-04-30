@@ -5,7 +5,7 @@ import org.javarush.apostol.cryptoanalizer.constants.Constants;
 import org.javarush.apostol.cryptoanalizer.view.ConsoleView;
 
 public class KeyManager {
-    private ConsoleView view;
+    private final ConsoleView view;
 
     public KeyManager(ConsoleView view) {
         this.view = view;

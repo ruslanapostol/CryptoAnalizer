@@ -3,7 +3,7 @@ package org.javarush.apostol.cryptoanalizer.view;
 import java.util.Scanner;
 
 public class ConsoleView {
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     public int getKeyFromUser() {
         System.out.println("Enter the key (integer): ");
