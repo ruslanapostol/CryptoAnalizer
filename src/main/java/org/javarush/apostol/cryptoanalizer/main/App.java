@@ -2,52 +2,50 @@ package org.javarush.apostol.cryptoanalizer.main;
 
 
 import org.javarush.apostol.cryptoanalizer.constants.Constants;
-import org.javarush.apostol.cryptoanalizer.exception.AppException;
 import org.javarush.apostol.cryptoanalizer.model.Caesar;
-import org.javarush.apostol.cryptoanalizer.operations.BruteForceOperation;
-import org.javarush.apostol.cryptoanalizer.operations.DecryptOperation;
-import org.javarush.apostol.cryptoanalizer.operations.EncryptOperation;
-import org.javarush.apostol.cryptoanalizer.operations.Operation;
-import org.javarush.apostol.cryptoanalizer.util.PathBuilder;
+import org.javarush.apostol.cryptoanalizer.operations.*;
 import org.javarush.apostol.cryptoanalizer.view.ConsoleView;
+
+
 
 public class App {
     public static void main(String[] args) {
-            ConsoleView view = new ConsoleView();
-
+        ConsoleView view = new ConsoleView();
         try {
-            if (args.length < 3) {
-                System.out.println(Constants.MSG_USAGE);
-                return;
+            while (true) {
+                view.displayMessage("Please select mode:");
+                view.displayMessage("1. Encrypt");
+                view.displayMessage("2. Decrypt");
+                view.displayMessage("3. Brute force");
+                view.displayMessage("4. Exit");
+
+                int choice = view.getKeyFromUser();
+                Operation operation;
+
+                switch (choice) {
+                    case 1:
+                        operation = new EncryptOperation(new Caesar(), view, Constants.INPUT_FILE_PATH, Constants.ENCRYPTED_FILE_PATH);
+                        break;
+                    case 2:
+                        operation = new DecryptOperation(new Caesar(), view, Constants.ENCRYPTED_FILE_PATH, Constants.DECRYPTED_FILE_PATH);
+                        break;
+                    case 3:
+                        operation = new BruteForceOperation(new Caesar(), view, Constants.ENCRYPTED_FILE_PATH, Constants.BRUTE_FORCE_FILE_PATH);
+                        break;
+                    case 4:
+                        view.displayMessage("Exiting the application...");
+                        return;  // Exit the loop and end the application
+                    default:
+                        view.displayError("Invalid option. Please enter a number between 1 and 4.");
+                        continue;  // Continue the loop, prompting the user again
+                }
+
+                operation.execute();  // Execute the selected operation
             }
-            String operationType = args[0];
-            String inputFileName = new PathBuilder(Constants.BASE_DIRECTORY).add(args[1]).build();
-            String outputFileName = new PathBuilder(Constants.BASE_DIRECTORY).add(args[2]).build();
-
-            Caesar caesar = new Caesar();
-            Operation operation;
-
-            switch (operationType) {
-                case Constants.OPERATION_ENCRYPT:
-                    operation = new EncryptOperation(caesar, view, inputFileName, outputFileName);
-                    break;
-                case Constants.OPERATION_DECRYPT:
-                    operation = new DecryptOperation(caesar, view, inputFileName, outputFileName);
-                    break;
-                case Constants.OPERATION_BRUTE_FORCE:
-                    operation = new BruteForceOperation(caesar, view, inputFileName, outputFileName);
-                    break;
-                default:
-                    System.err.println(Constants.ERROR_INVALID_OPERATION);
-                    return;
-            }
-
-            operation.execute();
-        } catch (AppException e) {
-            System.err.println("Application error: " + e.getMessage());
         } finally {
-            view.close();
+            view.close();  // Ensure resources are closed properly
         }
     }
 }
+
 

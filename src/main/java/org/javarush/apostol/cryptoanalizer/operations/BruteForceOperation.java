@@ -17,18 +17,39 @@ public class BruteForceOperation extends Operation {
     public void execute() {
         try {
             String content = FileUtil.readFile(inputFileName);
-            for (int key = 1; key <= 40; key++) { // Adjust key range as needed
+            boolean decryptionSuccessful = false;
+            for (int key = 1; key < 42; key++) {
                 String decrypted = caesar.decrypt(content, key);
-                if (decrypted.contains(Constants.KNOWN_PLAINTEXT)) {
+                if (isLikelyRussian(decrypted)) {
                     FileUtil.writeFile(outputFileName, decrypted);
                     view.displayMessage("Decryption successful with key = " + key);
                     view.displayMessage("Decrypted text saved to " + outputFileName);
+                    decryptionSuccessful = true;
                     break;
                 }
+            }
+
+            if (!decryptionSuccessful) {
+                view.displayMessage("Decryption failed");
             }
         } catch (AppException e) {
             view.displayError("Error: " + e.getMessage());
         }
+    }
+
+    private boolean isLikelyRussian(String text) {
+        String commonChars = "оеаинт";
+        double threshold = 0.3;
+        int count = 0;
+
+        for (char c : text.toCharArray()) {
+            if (commonChars.indexOf(c) >= 0) {
+                count++;
+
+            }
+        }
+
+        return (double) count / text.length() > threshold;
     }
 }
 
