@@ -8,20 +8,20 @@ import org.javarush.apostol.cryptoanalizer.view.ConsoleView;
 
 public class DecryptOperation extends Operation {
 
-    public DecryptOperation(Caesar caesar, ConsoleView view, String inputFileName, String outputFileName) {
-        super(caesar, view, inputFileName, outputFileName);
+    public DecryptOperation(Caesar caesar, ConsoleView view,
+                            String inputFileName, String outputFileName, int key) {
+        super(caesar, view, inputFileName, outputFileName, key);
     }
 
     @Override
     public void execute() {
         try {
-            int key = keyManager.getValidKey();
             String content = FileUtil.readFile(inputFileName);
             String decrypted = caesar.decrypt(content, key);
             FileUtil.writeFile(outputFileName, decrypted);
-            view.displayMessage("Decrypted text saved to " + outputFileName);
+            view.displayMessage("Decryption complete. Output in " + outputFileName);
         } catch (AppException e) {
-            view.displayError("Error: " + e.getMessage());
+            view.displayError("Error during decryption: " + e.getMessage());
         }
     }
 }

@@ -8,20 +8,20 @@ import org.javarush.apostol.cryptoanalizer.view.ConsoleView;
 
 public class EncryptOperation extends Operation {
 
-    public EncryptOperation(Caesar caesar, ConsoleView view, String inputFileName, String outputFileName) {
-        super(caesar, view, inputFileName, outputFileName);
+    public EncryptOperation(Caesar caesar, ConsoleView view, String inputFileName,
+                            String outputFileName, int key) {
+        super(caesar, view, inputFileName, outputFileName, key);
     }
 
     @Override
     public void execute() {
         try {
-            int key = keyManager.getValidKey();
             String content = FileUtil.readFile(inputFileName);
             String encrypted = caesar.encrypt(content, key);
             FileUtil.writeFile(outputFileName, encrypted);
             view.displayMessage("Encrypted text saved to " + outputFileName);
         } catch (AppException e) {
-            view.displayError("Error: " + e.getMessage());
+            view.displayError("Error during encryption: " + e.getMessage());
         }
     }
 }
