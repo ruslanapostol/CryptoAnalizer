@@ -11,6 +11,5 @@ public class Constants {
     public static final String ENCRYPTED_FILE_PATH = BASE_DIRECTORY + "encrypted_text.txt";
     public static final String DECRYPTED_FILE_PATH = BASE_DIRECTORY +  "decrypted_text.txt";
     public static final String BRUTE_FORCE_FILE_PATH = BASE_DIRECTORY +  "bruteforce_text.txt";
-
 }
 

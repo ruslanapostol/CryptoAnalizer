@@ -5,15 +5,6 @@ import java.util.Scanner;
 public class ConsoleView {
     private final Scanner scanner = new Scanner(System.in);
 
-    public int getKeyFromUser() {
-        System.out.println("Enter the key (integer): ");
-        while (!scanner.hasNextInt()) {
-            scanner.next(); // Consume the invalid input
-            System.out.println("Invalid input. Please enter an integer:");
-        }
-        return scanner.nextInt();
-    }
-
     public void displayMessage(String message) {
         System.out.println(message);
     }

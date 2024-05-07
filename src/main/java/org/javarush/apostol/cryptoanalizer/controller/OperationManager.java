@@ -2,10 +2,7 @@ package org.javarush.apostol.cryptoanalizer.controller;
 
 import org.javarush.apostol.cryptoanalizer.constants.Constants;
 import org.javarush.apostol.cryptoanalizer.model.Caesar;
-import org.javarush.apostol.cryptoanalizer.operations.BruteForceOperation;
-import org.javarush.apostol.cryptoanalizer.operations.DecryptOperation;
-import org.javarush.apostol.cryptoanalizer.operations.EncryptOperation;
-import org.javarush.apostol.cryptoanalizer.operations.Operation;
+import org.javarush.apostol.cryptoanalizer.operations.*;
 import org.javarush.apostol.cryptoanalizer.view.ConsoleView;
 
 import java.util.Scanner;
@@ -21,7 +18,8 @@ public class OperationManager {
 
     public void executeOperation(String choice) {
         Operation operation = null;
-        String inputFilePath, outputFilePath;
+        String inputFilePath;
+        String outputFilePath;
         int key;
 
         switch (choice) {
@@ -42,8 +40,7 @@ public class OperationManager {
                 operation = new BruteForceOperation(new Caesar(), view, inputFilePath, Constants.BRUTE_FORCE_FILE_PATH);
                 break;
             case "4":
-                view.displayMessage("Exiting the application...");
-                System.exit(0);
+                operation = new ExitOperation(view);
                 break;
             default:
                 view.displayMessage("Invalid option. Please enter a number between 1 and 4.");
