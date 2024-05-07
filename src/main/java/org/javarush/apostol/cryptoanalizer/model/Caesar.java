@@ -11,6 +11,10 @@ public class Caesar {
             '.', ',', '!', '?', ' ', '-', '"', '—'
     );
 
+    public static List<Character> getAlphabet() {
+        return Collections.unmodifiableList(ALPHABET);
+    }
+
     private static final Map<Character, Integer> ALPHABET2POS = initializeAlphabetMap();
 
     private static Map<Character, Integer> initializeAlphabetMap() {

@@ -2,10 +2,12 @@ package org.javarush.apostol.cryptoanalizer.operations;
 
 
 import org.javarush.apostol.cryptoanalizer.constants.Constants;
-import org.javarush.apostol.cryptoanalizer.exception.AppException;
 import org.javarush.apostol.cryptoanalizer.model.Caesar;
 import org.javarush.apostol.cryptoanalizer.util.FileUtil;
 import org.javarush.apostol.cryptoanalizer.view.ConsoleView;
+
+import java.util.List;
+
 
 public class BruteForceOperation extends Operation {
 
@@ -15,38 +17,38 @@ public class BruteForceOperation extends Operation {
 
     @Override
     public void execute() {
-        try {
-            String content = FileUtil.readFile(inputFileName);
-            boolean foundValidDecryption = false;
-            for (int key = Constants.MIN_KEY_VALUE; key < Constants.MAX_KEY_VALUE; key++) {
-                String decrypted = caesar.decrypt(content, key);
-                if (isLikelyRussian(decrypted)) {
-                    FileUtil.writeFile(outputFileName, decrypted);
-                    view.displayMessage("Decryption successful with key = " + key);
-                    foundValidDecryption = true;
-                    break;
-                }
-            }
-            if (!foundValidDecryption) {
-                view.displayMessage("No successful decryption found.");
-                FileUtil.writeFile(outputFileName,"No successful decryption found.");
-            }
-        } catch (AppException e) {
-            view.displayError("Error during brute force decryption: " + e.getMessage());
-        }
+        String content = FileUtil.readFile(inputFileName);
+        int bestKey = findBestKeyUsingChar(content);
+        String decrypted = caesar.decrypt(content, bestKey);
+        FileUtil.writeFile(outputFileName, decrypted);
+        view.displayMessage("Decryption complete using key = " + bestKey + ". Output in " + outputFileName);
     }
 
-    private boolean isLikelyRussian(String text) {
-        String commonRussianLetters = "оеаинт";
-        int count = 0;
+    private int findBestKeyUsingChar(String content) {
+        int bestKey = 0;
+        int maxCharCount = 0;
+        List<Character> alphabet = Caesar.getAlphabet();
 
-        for (char c : text.toCharArray()) {
-            if (commonRussianLetters.indexOf(Character.toLowerCase(c)) >= 0) {
-                count++;
+        for (int key = Constants.MIN_KEY_VALUE; key < Constants.MAX_KEY_VALUE; key++) {
+            int charCount = countCharInFileWithKey(content, key, alphabet);
+            if (charCount > maxCharCount) {
+                maxCharCount = charCount;
+                bestKey = key;
             }
         }
-        double threshold = 0.3;
-        return (double) count / text.length() > threshold;
+        return bestKey;
+    }
+
+    private int countCharInFileWithKey(String content, int key, List<Character> alphabet) {
+        int charCount = 0;
+
+        for (char ch : content.toCharArray()) {
+            int decodedIndex = (alphabet.indexOf(ch) - key + alphabet.size()) % alphabet.size();
+            if (alphabet.get(decodedIndex) == ' ') {
+                charCount++;
+            }
+        }
+        return charCount;
     }
 }
 
